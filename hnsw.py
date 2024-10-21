@@ -9,6 +9,31 @@ from heapq import heapify, heappop, heappush, heapreplace, nlargest, nsmallest
 def l2_distance(a, b):
     return np.linalg.norm(a - b)
 
+def modified_heuristic(candidates, curr, k, distance_func, data, long_edge_ratio=0.2):
+    candidates = sorted(candidates, key=lambda a: a[1])
+    result_indx_set = {candidates[0][0]}
+    result = [candidates[0]]
+    added_data = [data[candidates[0][0]]]
+
+    for c, curr_dist in candidates[1:]:
+        c_data = data[c]
+        if curr_dist < min(map(lambda a: distance_func(c_data, a), added_data)):
+            result.append((c, curr_dist))
+            result_indx_set.add(c)
+            added_data.append(c_data)
+        if len(result) >= k: 
+            break
+
+    num_long_edges = int(k * long_edge_ratio)
+    far_neighbors = candidates[-num_long_edges:]
+
+    for c, curr_dist in far_neighbors:
+        if c not in result_indx_set:
+            result.append((c, curr_dist))
+            result_indx_set.add(c)
+
+    return result
+
 def heuristic(candidates, curr, k, distance_func, data):
     candidates = sorted(candidates, key=lambda a: a[1])
     result_indx_set = {candidates[0][0]}
@@ -25,6 +50,7 @@ def heuristic(candidates, curr, k, distance_func, data):
             result.append( (c, curr_dist) )
     
     return result
+
 def k_closest(candidates: list, curr, k, distance_func, data):
     return sorted(candidates, key=lambda a: a[1])[:k]
     
