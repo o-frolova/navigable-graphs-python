@@ -10,7 +10,7 @@ import random
 import itertools
 random.seed(108)
 from hnsw import HNSW
-from hnsw import l2_distance, heuristic
+from hnsw import l2_distance, heuristic, modified_heuristic
 
 
 def brute_force_knn_search(distance_func, k, q, data):
@@ -82,16 +82,16 @@ def generate_synthetic_data(dim, n, nq):
 
 def main():
     parser = argparse.ArgumentParser(description='Test recall of beam search method with KGraph.')
-    parser.add_argument('--dataset', choices=['synthetic', 'sift'], default='synthetic', help="Choose the dataset to use: 'synthetic' or 'sift'.")
+    parser.add_argument('--dataset', choices=['synthetic', 'sift'], default='sift', help="Choose the dataset to use: 'synthetic' or 'sift'.")
     parser.add_argument('--K', type=int, default=5, help='The size of the neighbourhood')
     parser.add_argument('--M', type=int, default=50, help='Avg number of neighbors')
-    parser.add_argument('--M0', type=int, default=50, help='Avg number of neighbors')
+    parser.add_argument('--M0', type=int, default=32, help='Avg number of neighbors')
     parser.add_argument('--dim', type=int, default=2, help='Dimensionality of synthetic data (ignored for SIFT).')
     parser.add_argument('--n', type=int, default=200, help='Number of training points for synthetic data (ignored for SIFT).')
     parser.add_argument('--nq', type=int, default=50, help='Number of query points for synthetic data (ignored for SIFT).')
     parser.add_argument('--k', type=int, default=5, help='Number of nearest neighbors to search in the test stage')
-    parser.add_argument('--ef', type=int, default=10, help='Size of the beam for beam search.')
-    parser.add_argument('--m', type=int, default=3, help='Number of random entry points.')
+    parser.add_argument('--ef', type=int, default=64, help='Size of the beam for beam search.')
+    parser.add_argument('--m', type=int, default=16, help='Number of random entry points.')
 
     args = parser.parse_args()
 
@@ -106,7 +106,7 @@ def main():
 
     # Create HNSW
 
-    hnsw = HNSW( distance_func=l2_distance, m=args.M, m0=args.M0, ef=10, ef_construction=30,  neighborhood_construction = heuristic)
+    hnsw = HNSW( distance_func=l2_distance, m=args.M, m0=args.M0, ef=10, ef_construction=30,  neighborhood_construction = modified_heuristic)
     # Add data to HNSW
     for x in tqdm(train_data):
         hnsw.add(x)
