@@ -58,8 +58,11 @@ For instance, with M0 = 32, M = 16, and Ef = 64, the average calculations droppe
 
 The Modified method provides both higher recall and reduced computation across all tested configurations, making it a clear improvement over the Baseline method for the Sift10k dataset.
 
+![64_32](./results/images/64_32.png)
+![32_16](./results/images/32_16.png)
+![16_8](./results/images/16_8.png)
 
-![Sift10k](./sift10k.png)
+![Sift10k](./results/images/sift10k.png)
 
 <h2>Sift1m Dataset:</h2>
 
@@ -78,7 +81,7 @@ For the same configuration (M0 = 32, M = 16, Ef = 64), the average calculations 
 On the Sift1m dataset, the Modified method sacrifices some recall in exchange for much greater efficiency.
 This trade-off might be beneficial in scenarios where computational efficiency is a higher priority than achieving maximum recall.
 
-![Sift1m](./sift1m.png)
+![Sift1m](./results/images/sift1m.png)
 
 
 
